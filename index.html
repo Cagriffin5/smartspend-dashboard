@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartSpend // Personal Finance Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Main Container -->
+    <main class="dashboard-container">
+        
+        <!-- App Header Area -->
+        <header class="app-header">
+            <h1>SmartSpend<span>.</span></h1>
+            <p>Portfolio Project // Fintech UI Prototype</p>
+        </header>
+
+        <!-- Metrics Grid (QuickBooks Style) -->
+        <section class="metrics-grid">
+            <div class="card card-income">
+                <h3>Total Income</h3>
+                <p id="display-income">$0.00</p>
+            </div>
+            <div class="card card-expenses">
+                <h3>Total Expenses</h3>
+                <p id="display-expenses">$0.00</p>
+            </div>
+            <div class="card card-balance">
+                <h3>Net Balance</h3>
+                <p id="display-balance">$0.00</p>
+            </div>
+        </section>
+
+        <!-- Split Layout Panel -->
+        <div class="layout-split">
+            
+            <!-- Left Panel: Input Forms -->
+            <section class="panel panel-inputs">
+                <h2>Log Transaction</h2>
+                
+                <form id="transaction-form">
+                    <div class="form-group">
+                        <label for="desc">Description</label>
+                        <input type="text" id="desc" placeholder="e.g., Freelance Design, Grocery, Rent" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount">Amount ($)</label>
+                        <input type="number" id="amount" step="0.01" placeholder="0.00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="type">Transaction Type</label>
+                        <select id="type" required>
+                            <option value="income">Income (+)</option>
+                            <option value="expense">Expense (-)</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Add Transaction</button>
+                </form>
+            </section>
+
+            <!-- Right Panel: Transaction Ledger -->
+            <section class="panel panel-ledger">
+                <h2>Transaction History</h2>
+                <div class="ledger-wrapper">
+                    <table class="ledger-table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Type</th>
+                                <th class="text-right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ledger-body">
+                            <!-- Dynamic items injected here via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Connect JavaScript Engine -->
+    <script src="app.js"></script>
+</body>
+</html>
