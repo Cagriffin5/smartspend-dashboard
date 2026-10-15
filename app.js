@@ -1,108 +1,111 @@
-/**
- * SmartSpend App Engine 
- * Handles state management, UI rendering, math reduction, and localized persistence storage.
- */
+document.addEventListener('DOMContentLoaded', () => {
+  // Application Balance States Registry Data Array
+  let transactions = [];
 
-// 1. Establish App State Architecture
-let transactions = JSON.parse(localStorage.getItem('smartspend_data')) || [];
+  // DOM Input Component Form Elements
+  const transactionForm = document.getElementById('transaction-form');
+  const ledgerBody = document.getElementById('ledger-body');
 
-// 2. Fetch DOM Interface Node Handles
-const form = document.getElementById('transaction-form');
-const descInput = document.getElementById('desc');
-const amountInput = document.getElementById('amount');
-const typeInput = document.getElementById('type');
-const ledgerBody = document.getElementById('ledger-body');
+  // Top Level Metric Panel Displays
+  const displayIncome = document.getElementById('display-income');
+  const displayExpenses = document.getElementById('display-expenses');
+  const displayBalance = document.getElementById('display-balance');
 
-const displayIncome = document.getElementById('display-income');
-const displayExpenses = document.getElementById('display-expenses');
-const displayBalance = document.getElementById('display-balance');
+  /* -------------------------------------------------------------
+     1. Form Interaction Logic Event Listener Entry Hook
+  ------------------------------------------------------------- */
+  if (transactionForm) {
+    transactionForm.addEventListener('submit', (e) => {
+      e.preventDefault();
 
-// 3. Mathematical Recalculation Engine
-function calculateFinancials() {
-    // Isolate & total up income items
-    const incomeTotal = transactions
-        .filter(t => t.type === 'income')
-        .reduce((sum, t) => sum + t.amount, 0);
+      // Retrieve and parse user input elements array matrix
+      const description = document.getElementById('desc').value.trim();
+      const amount = parseFloat(document.getElementById('amount').value);
+      const type = document.getElementById('type').value;
 
-    // Isolate & total up expense items
-    const expenseTotal = transactions
-        .filter(t => t.type === 'expense')
-        .reduce((sum, t) => sum + t.amount, 0);
+      const newTransaction = {
+        id: 'TXN-' + Date.now(),
+        description,
+        amount,
+        type
+      };
 
-    // Calculate aggregate net balance
-    const netBalance = incomeTotal - expenseTotal;
+      // Register object ledger balance entry, reset form inputs, and recalculate financials
+      transactions.unshift(newTransaction); // Insert latest record entry to header positions
+      transactionForm.reset();
+      synchronizeFinancialState();
+    });
+  }
 
-    // Render formatted currency outputs onto display elements
-    displayIncome.textContent = `$${incomeTotal.toFixed(2)}`;
-    displayExpenses.textContent = `$${expenseTotal.toFixed(2)}`;
-    displayBalance.textContent = `$${netBalance.toFixed(2)}`;
+  /* -------------------------------------------------------------
+     2. Calculation Pipeline & Aggregation Pipeline Core Routing
+  ------------------------------------------------------------- */
+  function synchronizeFinancialState() {
+    renderHistoryLedger();
+    calculateFinancialAggregations();
+  }
 
-    // Graphic Design Rule: Apply visual warnings if balance dips into negative thresholds
-    if (netBalance < 0) {
-        displayBalance.style.color = '#d53d4c'; // Warning red
-    } else {
-        displayBalance.style.color = '#1d252c'; // Standard primary dark text
-    }
-}
-
-// 4. Dynamic Data Ledger Rendering
-function renderLedger() {
-    // Purge existing elements to mitigate interface rendering duplications
+  function renderHistoryLedger() {
     ledgerBody.innerHTML = '';
 
-    // Loop array to generate data table matrix rows
-    transactions.forEach(t => {
-        const row = document.createElement('tr');
+    if (transactions.length === 0) {
+      ledgerBody.innerHTML = `<tr><td colspan="3" class="text-center" style="color: var(--text-muted); padding: 24px; text-align: center;">No registered activity entries available.</td></tr>`;
+      return;
+    }
 
-        // Formulate dynamic context badge values and styles based on element item types
-        const typeBadge = t.type === 'income' 
-            ? `<span class="badge-income">INFLOW</span>` 
-            : `<span class="badge-expense">OUTFLOW</span>`;
+    transactions.forEach(txn => {
+      const row = document.createElement('tr');
+      
+      // Select appropriate visual prefix and modifier variables classes tokens
+      const isIncome = txn.type === 'income';
+      const typeLabel = isIncome ? 'Income' : 'Expense';
+      const typeClass = isIncome ? 'text-income' : 'text-expense';
+      const prefix = isIncome ? '+' : '-';
 
-        const amountCell = t.type === 'income'
-            ? `+ $${t.amount.toFixed(2)}`
-            : `- $${t.amount.toFixed(2)}`;
+      row.innerHTML = `
+        <td><strong>${escapeHTML(txn.description)}</strong></td>
+        <td><span class="${typeClass}" style="font-weight: 600; font-size: 0.85rem;">${typeLabel}</span></td>
+        <td class="text-right ${typeClass}" style="font-family: monospace; font-weight: bold; font-size: 1rem;">
+          ${prefix}$${txn.amount.toFixed(2)}
+        </td>
+      `;
 
-        // Populate table element row body block string templates
-        row.innerHTML = `
-            <td>${t.description}</td>
-            <td>${typeBadge}</td>
-            <td class="text-right ${t.type === 'income' ? 'badge-income' : 'badge-expense'}">${amountCell}</td>
-        `;
-
-        // Inject row directly into live document view block
-        ledgerBody.appendChild(row);
+      ledgerBody.appendChild(row);
     });
-}
+  }
 
-// 5. Global State Storage Updates
-function updateStorage() {
-    localStorage.setItem('smartspend_data', JSON.stringify(transactions));
-    calculateFinancials();
-    renderLedger();
-}
+  function calculateFinancialAggregations() {
+    let incomeTotal = 0;
+    let expenseTotal = 0;
 
-// 6. User Transaction Intercept Handle Event Listener
-form.addEventListener('submit', function(event) {
-    event.preventDefault(); // Inhibit page payload reload behaviors
+    // Direct loop tracking matrix totals avoiding precision clipping variations
+    transactions.forEach(txn => {
+      if (txn.type === 'income') {
+        incomeTotal += txn.amount;
+      } else {
+        expenseTotal += txn.amount;
+      }
+    });
 
-    // Sanitize and structure user values into typed object schemas
-    const newTransaction = {
-        id: Date.now(), // Generate a unique identifier tracking key
-        description: descInput.value.trim(),
-        amount: parseFloat(amountInput.value),
-        type: typeInput.value
-    };
+    const netBalance = incomeTotal - expenseTotal;
 
-    // Append payload item block directly onto operational state array tracking vectors
-    transactions.push(newTransaction);
+    // Inject metrics formatted clean strings down into the panel display views
+    displayIncome.textContent = `$${incomeTotal.toFixed(2)}`;
+    displayExpenses.textContent = `$${expenseTotal.toFixed(2)}`;
+    displayBalance.textContent = `${netBalance >= 0 ? '' : '-'}$${Math.abs(netBalance).toFixed(2)}`;
 
-    // Sync app arrays, recompute visuals, save to storage, and reset form
-    updateStorage();
-    form.reset();
-    descInput.focus();
+    // Toggle balance coloration classes flags conditionally matching state values
+    if (netBalance >= 0) {
+      displayBalance.className = 'text-income';
+    } else {
+      displayBalance.className = 'text-expense';
+    }
+  }
+
+  /* Helper script scrubbing user input values clean of unsafe execution string characters */
+  function escapeHTML(str) {
+    return str.replace(/[&<>'"]/g, 
+      tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+    );
+  }
 });
-
-// 7. Initial Initialization Lifecycle Run Trigger
-calculateFinancials();
-renderLedger();

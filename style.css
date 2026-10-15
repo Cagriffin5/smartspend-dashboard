@@ -1,191 +1,229 @@
-/* --- CSS Color Design Variables --- */
+/* ==========================================================================
+   1. SYSTEM DESIGN TOKENS
+   ========================================================================== */
 :root {
-    --bg-main: #f4f6f9;
-    --panel-bg: #ffffff;
-    --text-primary: #1d252c;
-    --text-muted: #627685;
-    --primary-blue: #0077c5; /* Intuit Core Blue Brand Accent */
-    --success-green: #27a36c;
-    --danger-red: #d53d4c;
-    --border-color: #e3e8ee;
-    --radius-sm: 6px;
-    --radius-lg: 12px;
+  --bg-main: #0f1115;
+  --bg-panel: #161a22;
+  --bg-input: #1f2430;
+  --text-main: #f0f4f8;
+  --text-muted: #8a99ad;
+  --accent-base: #ED3814;
+  --color-income: #10b981;
+  --color-expense: #ef4444;
+  --focus-ring: #00bcff;
 }
 
-/* --- Global Settings --- */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+/* ==========================================================================
+   2. GLOBAL SETUP & LAYOUT BASE
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
 body {
-    background-color: var(--bg-main);
-    color: var(--text-primary);
-    padding: 40px 20px;
-    display: flex;
-    justify-content: center;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  min-height: 100vh;
 }
 
 .dashboard-container {
-    width: 100%;
-    max-width: 1100px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
-/* --- Header Branding --- */
-.app-header {
-    margin-bottom: 32px;
-}
-
+/* App Header Area */
 .app-header h1 {
-    font-size: 32px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
+  font-family: "Geo", sans-serif;
+  font-size: 2.8rem;
+  margin: 0;
+  color: var(--text-main);
 }
 
 .app-header h1 span {
-    color: var(--primary-blue);
+  color: var(--accent-base);
 }
 
 .app-header p {
-    color: var(--text-muted);
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 4px;
+  color: var(--text-muted);
+  margin: 4px 0 0 0;
+  font-size: 0.95rem;
 }
 
-/* --- Metrics Metric Summary Cards --- */
+/* ==========================================================================
+   3. METRICS CARD MATRIX GRID (Fluid QuickBooks Profile)
+   ========================================================================== */
 .metrics-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    margin-bottom: 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
 }
 
 .card {
-    background: var(--panel-bg);
-    padding: 24px;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  background-color: var(--bg-panel);
+  padding: 24px;
+  border-radius: 10px;
+  border-left: 4px solid var(--panel-bg);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .card h3 {
-    font-size: 14px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    margin-bottom: 8px;
+  margin: 0;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
 }
 
 .card p {
-    font-size: 28px;
-    font-weight: 700;
+  margin: 8px 0 0 0;
+  font-size: 2rem;
+  font-weight: bold;
 }
 
-.card-income p { color: var(--success-green); }
-.card-expenses p { color: var(--danger-red); }
-.card-balance p { color: var(--text-primary); }
+.card-income { border-left-color: var(--color-income); }
+.card-expenses { border-left-color: var(--color-expense); }
+.card-balance { border-left-color: var(--text-main); }
 
-/* --- Split Panel UI Layout --- */
+/* Dynamic state text coloring modifiers */
+.text-income { color: var(--color-income); }
+.text-expense { color: var(--color-expense); }
+
+/* ==========================================================================
+   4. INPUT PANEL LAYOUTS & FORMS
+   ========================================================================== */
 .layout-split {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 30px;
-}
-
-@media (max-width: 850px) {
-    .layout-split {
-        grid-template-columns: 1fr;
-    }
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
 }
 
 .panel {
-    background: var(--panel-bg);
-    padding: 32px;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border-color);
+  background-color: var(--bg-panel);
+  padding: 28px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .panel h2 {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 24px;
-    border-bottom: 2px solid var(--bg-main);
-    padding-bottom: 12px;
+  font-size: 1.35rem;
+  margin: 0 0 24px 0;
+  border-left: 3px solid var(--accent-base);
+  padding-left: 12px;
 }
 
-/* --- Inputs Form Architecture --- */
 .form-group {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .form-group label {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: var(--text-primary);
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-muted);
 }
 
-.form-group input, .form-group select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
-    font-size: 15px;
-    background: var(--bg-main);
-    outline: none;
-    transition: border 0.2s ease;
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 16px;
+  background-color: var(--bg-input);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 6px;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
 }
 
-.form-group input:focus, .form-group select:focus {
-    border-color: var(--primary-blue);
-    background: #fff;
+.form-group input:focus,
+.form-group select:focus {
+  outline: 2px solid var(--focus-ring);
+  border-color: transparent;
 }
 
 .btn-submit {
-    width: 100%;
-    background: var(--primary-blue);
-    color: white;
-    padding: 14px;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.2s;
+  width: 100%;
+  padding: 14px;
+  background-color: var(--accent-base);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
 }
 
 .btn-submit:hover {
-    opacity: 0.9;
+  opacity: 0.9;
 }
 
-/* --- Financial Ledger Layout --- */
+.btn-submit:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   5. TRANSACTIONS LEDGER DISPLAY
+   ========================================================================== */
 .ledger-wrapper {
-    overflow-x: auto;
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 6px;
+  max-height: 400px; /* Locks overflow scrolling track boundaries gracefully */
+  overflow-y: auto;
+}
+
+.ledger-wrapper:focus-visible {
+  outline: 2px solid var(--focus-ring);
 }
 
 .ledger-table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.95rem;
 }
 
-.ledger-table th, .ledger-table td {
-    padding: 14px 16px;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 15px;
+.ledger-table th,
+.ledger-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
 .ledger-table th {
-    color: var(--text-muted);
-    font-weight: 600;
-    font-size: 13px;
-    text-transform: uppercase;
+  background-color: rgba(0,0,0,0.15);
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
-.text-right { text-align: right !important; }
-.badge-income { color: var(--success-green); font-weight: 600; }
-.badge-expense { color: var(--danger-red); font-weight: 600; }
+.ledger-table tbody tr {
+  transition: background-color 0.15s;
+}
+
+.ledger-table tbody tr:hover {
+  background-color: rgba(255,255,255,0.02);
+}
+
+.text-right { text-align: right; }
+
+/* ==========================================================================
+   6. TABLET & DESKTOP SPLIT MEDIA QUERY BREAKPOINT
+   ========================================================================== */
+@media (min-width: 992px) {
+  .layout-split {
+    grid-template-columns: 400px 1fr; /* Rigid side-by-side balanced dashboard workflow layout orientation */
+  }
+}

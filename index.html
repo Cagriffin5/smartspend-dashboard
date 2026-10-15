@@ -17,8 +17,8 @@
             <p>Portfolio Project // Fintech UI Prototype</p>
         </header>
 
-        <!-- Metrics Grid (QuickBooks Style) -->
-        <section class="metrics-grid">
+        <!-- Metrics Grid (Dynamic update tracking announced politely to assistive tech) -->
+        <section class="metrics-grid" aria-label="Financial Status Summary" aria-live="polite">
             <div class="card card-income">
                 <h3>Total Income</h3>
                 <p id="display-income">$0.00</p>
@@ -37,8 +37,8 @@
         <div class="layout-split">
             
             <!-- Left Panel: Input Forms -->
-            <section class="panel panel-inputs">
-                <h2>Log Transaction</h2>
+            <section class="panel panel-inputs" aria-labelledby="form-heading">
+                <h2 id="form-heading">Log Transaction</h2>
                 
                 <form id="transaction-form">
                     <div class="form-group">
@@ -48,7 +48,7 @@
 
                     <div class="form-group">
                         <label for="amount">Amount ($)</label>
-                        <input type="number" id="amount" step="0.01" placeholder="0.00" required>
+                        <input type="number" id="amount" step="0.01" min="0.01" placeholder="0.00" required>
                     </div>
 
                     <div class="form-group">
@@ -64,9 +64,9 @@
             </section>
 
             <!-- Right Panel: Transaction Ledger -->
-            <section class="panel panel-ledger">
-                <h2>Transaction History</h2>
-                <div class="ledger-wrapper">
+            <section class="panel panel-ledger" aria-labelledby="ledger-heading">
+                <h2 id="ledger-heading">Transaction History</h2>
+                <div class="ledger-wrapper" tabindex="0" aria-label="Scrollable transaction timeline records ledger matrix">
                     <table class="ledger-table">
                         <thead>
                             <tr>
@@ -85,7 +85,6 @@
         </div>
     </main>
 
-    <!-- Connect JavaScript Engine -->
     <script src="app.js"></script>
 </body>
 </html>
